@@ -47,7 +47,7 @@ export default function App() {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => {
       controller.abort();
-    }, 5000);
+    }, 15000);
 
     try {
       setThinking(true);
