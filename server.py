@@ -19,10 +19,10 @@ BASE_DIR = Path(__file__).resolve().parent
 BOOK_PATH = BASE_DIR / "polerio_move_book.pkl"
 
 # Deve stare sotto il timeout del frontend.
-SEARCH_TIME_LIMIT = 2.8
+SEARCH_TIME_LIMIT = 0.8
 
 # 3 è un buon compromesso. Se su Render fosse lento, metti 2.
-MAX_SEARCH_DEPTH = 3
+MAX_SEARCH_DEPTH = 1
 
 MATE_SCORE = 1_000_000
 
@@ -590,9 +590,9 @@ def bot_move(request: BotMoveRequest):
         source = "repertorio Polerio"
 
         # 2. Se non trova la posizione, usa il mini-engine.
-        if move is None:
-            move, depth_completed = engine_1300_move(board)
-            source = f"fallback intelligente circa 1300 rapid, depth {depth_completed}"
+       if move is None:
+    move = quick_reasonable_move(board)
+    source = "fallback veloce intelligente"
 
         # 3. Se qualcosa è andato storto, usa fallback rapido.
         if move is None or move not in board.legal_moves:
