@@ -2,7 +2,7 @@
 
 
 
-A web chess bot inspired by the historical playing style of Giulio Cesare Polerio, one of the most important Italian chess players and theoreticians of the 16th century.
+A web chess bot inspired by the playing style of Polerio, my best friend grandpa.
 
 
 
