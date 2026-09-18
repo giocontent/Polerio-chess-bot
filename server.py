@@ -589,10 +589,10 @@ def bot_move(request: BotMoveRequest):
         move = choose_from_book(board)
         source = "repertorio Polerio"
 
-        # 2. Se non trova la posizione, usa il mini-engine.
-       if move is None:
-    move = quick_reasonable_move(board)
-    source = "fallback veloce intelligente"
+        # 2. Se non trova la posizione, usa il fallback veloce.
+        if move is None:
+            move = quick_reasonable_move(board)
+            source = "fallback veloce intelligente"
 
         # 3. Se qualcosa è andato storto, usa fallback rapido.
         if move is None or move not in board.legal_moves:
