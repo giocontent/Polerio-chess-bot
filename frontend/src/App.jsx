@@ -1,9 +1,11 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 
 const API_URL =
   import.meta.env.VITE_API_URL || "http://127.0.0.1:8001/bot-move";
+
+const BACKEND_URL = API_URL.replace(/\/bot-move\/?$/, "");
 
 function applyUciMove(game, uciMove) {
   if (!uciMove || typeof uciMove !== "string") return null;
@@ -42,6 +44,43 @@ export default function App() {
   const [moveHistory, setMoveHistory] = useState([]);
 
   const game = useMemo(() => new Chess(fen), [fen]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function wakeUpPolerio() {
+      setMessage("Polerio si sta preparando...");
+
+      try {
+        const response = await fetch(`${BACKEND_URL}/`, {
+          method: "GET",
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          throw new Error(`Backend non disponibile: ${response.status}`);
+        }
+
+        if (!cancelled) {
+          setMessage("Polerio è pronto. Tu giochi con il Bianco.");
+        }
+      } catch (error) {
+        console.warn("Wake-up backend non riuscito:", error);
+
+        if (!cancelled) {
+          setMessage(
+            "Polerio si sta ancora preparando. Puoi iniziare: proverò comunque a rispondere alla tua mossa."
+          );
+        }
+      }
+    }
+
+    wakeUpPolerio();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   async function askPolerioMove(positionAfterPlayerMove) {
     const controller = new AbortController();
@@ -101,7 +140,7 @@ export default function App() {
 
       if (error.name === "AbortError") {
         setMessage(
-          "Errore: Polerio non ha risposto entro 5 secondi. Guarda il terminale Python."
+          "Errore: Polerio non ha risposto entro 15 secondi. Riprova tra qualche secondo."
         );
       } else {
         setMessage(
