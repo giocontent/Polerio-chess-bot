@@ -2,8 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 
-const API_URL =
-  import.meta.env.VITE_API_URL || "http://127.0.0.1:8001/bot-move";
+const API_URL = "https://polerio-chess-bot.onrender.com/bot-move";
 
 const BACKEND_URL = API_URL.replace(/\/bot-move\/?$/, "");
 
